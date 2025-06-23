@@ -2,31 +2,61 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">JSX 與 HTML 的標籤屬性</h1><small>檔名：<code>reactAttr.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 
 <div id="root"></div>
 
 <script type="text/babel">
   function App() {
-    const htmlTemplate = '<div>這裡有一段文字</div>'
+    const htmlTemplate = {
+      __html: '<p>這裡有一段文字</p>',
+    }
 
     return (
       <div>
         {/* className */}
+        <div>
+          <button type="button" className="btn btn-primary">Primary</button>
+        </div>
 
         {/* checked 與 結尾標籤 */}
+        <div>
+          <input type="checkbox" defaultChecked />
+        </div>
 
         {/* defaultValue & value */}
+        <div>
+          <input type="text" defaultValue="卡斯伯" />
+        </div>
 
         {/* htmlFor */}
+        <div>
+          <label htmlFor="email">請輸入 Email</label>
+          <input type="email" id="email" />
+        </div>
 
         {/* selected */}
+        <div>
+          <select id="menu" defaultValue="2">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
 
-        { /* textarea */ }
+        { /* textarea */}
+        <div>
+          <textarea cols="30" rows="5" defaultValue="這裡可以放多行文字" />
+        </div>
 
         {/* dangerouslySetInnerHTML */}
+        <div dangerouslySetInnerHTML={htmlTemplate} />
 
         {/* onChange */}
+        <div>
+          <input type="text" onChange={(event) => console.log(event.target.value)} />
+        </div>
 
       </div>
     );
@@ -38,6 +68,7 @@
 </script>
 
 <hr>
+
 <!-- 將此片段的 HTML 轉為 React JSX -->
 <div>
   <div><button type="button" class="btn btn-primary">Primary</button></div>
@@ -62,6 +93,7 @@
   <div><div>這裡有一段文字</div></div>
   <div><input type="text" /></div>
 </div>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

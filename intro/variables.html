@@ -2,14 +2,36 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">使用資料驅動</h1><small>檔名：<code>variables.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
-<div id="root"></div>
 <!-- template：https://getbootstrap.com/docs/5.2/components/card/ -->
+
+<div id="root"></div>
+
 <script type="text/babel">
-console.log(React, ReactDOM);
+  // console.log(React, ReactDOM);
 
+  const data = {
+    title: "Card title",
+    content: "Some quick example text to build on the card title and make up the bulk of the card's content.",
+    imageUrl: "https://images.unsplash.com/photo-1745874864678-f464940bb513?q=80&w=500&auto=format&fit=crop&       ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    link: "https://unsplash.com/",
+  }
 
-const el = document.getElementById('root');
+  const App = () => {
+    return <div className="card">
+      <img src={data.imageUrl} className="card-img-top" alt={data.title} />
+      <div className="card-body">
+        <h5 className="card-title">{data.title}</h5>
+        <p className="card-text">{data.content}</p>
+        <a href={data.link} className="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+  }
+
+  const el = document.getElementById('root');
+  const root = ReactDOM.createRoot(el)
+  root.render(<App />)
 </script>
 
 <!-- 🙇🙇練習結束🙇🙇 -->

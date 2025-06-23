@@ -2,39 +2,40 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">什麼是 JavaScript 表達式</h1><small>檔名：<code>expression.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
-<div id="root"></div>
-<!-- JSX 與表達式：https://reactjs.org/docs/introducing-jsx.html#embedding-expressions-in-jsx -->
-<!-- 陳述語句：https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Statements -->
-<!-- 表達語句：
-  https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Guide/Expressions_and_Operators
--->
-<script>
-// 表達式與陳述式的差異
-</script>
 
+<!-- 🔥🔥練習開始🔥🔥 -->
+<!-- JSX 與表達式：https://reactjs.org/docs/introducing-jsx.html#embedding-expressions-in-jsx -->
+
+<!-- 表達式與陳述式的差異 -->
+<!-- 陳述語句：https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Statements -->
+<!-- 表達語句：https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Guide/Expressions_and_Operators -->
+
+<div id="root"></div>
 
 <script type="text/babel">
-function App() {
-  const data = {
-    imageUrl: 'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2352&q=80',
-    name: '卡斯伯',
-    description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi culpa aspernatur tempore cupiditate illo minima voluptatem blanditiis optio accusantium earum voluptate magni repellendus, ipsa dolor adipisci libero qui commodi veritatis.',
-    link: 'https://www.casper.tw/'
-  }
-  return <div className="card w-50">
-    <img src={data.imageUrl} className="card-img-top" alt="..." />
-    <div className="card-body">
-      <h5 className="card-title">{ data.name }</h5>
-      <p className="card-text">{ data.description }</p>
-      <a href={data.link} target="_blank" className="btn btn-primary">Go somewhere</a>
+  function App() {
+    const data = {
+      imageUrl: 'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2352&q=80',
+      name: '卡斯伯',
+      description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Modi culpa aspernatur tempore cupiditate illo minima voluptatem blanditiis optio accusantium earum voluptate magni repellendus, ipsa dolor adipisci libero qui commodi veritatis.',
+      link: 'https://www.casper.tw/'
+    }
+    return <div className="card w-50">
+      <img src={data.imageUrl} className="card-img-top" alt="..." />
+      <div className="card-body">
+        <h5 className="card-title">{data.name}</h5>
+        <p className="card-text">{data.description}</p>
+        <a href={data.link} target="_blank" className="btn btn-primary">Go somewhere</a>
+        <br />
+        {data.name || '小明'}
+        {(function () { return 2 * 4 })() /* 函式表達式 */}
+      </div>
     </div>
-  </div>
-}
+  }
 
-const el = document.getElementById('root')
-const root = ReactDOM.createRoot(el);
-root.render(<App/>);
+  const el = document.getElementById('root')
+  const root = ReactDOM.createRoot(el);
+  root.render(<App />);
 </script>
 
 <!-- 🙇🙇練習結束🙇🙇 -->

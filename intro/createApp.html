@@ -2,6 +2,7 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">環境安裝</h1><small>檔名：<code>createApp.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <!-- 五步驟，載入 React -->
 <!-- https://reactjs.org/docs/cdn-links.html#gatsby-focus-wrapper -->
@@ -9,6 +10,31 @@
 
 <!-- 補充說明：定義 App 元件時，可自訂名稱但請使用大寫做開頭 -->
 <!-- 詳細說明文件：https://zh-hant.reactjs.org/docs/jsx-in-depth.html#user-defined-components-must-be-capitalized -->
+
+<!-- React 的掛載點 -->
+<div id="root"></div>
+
+<!-- 載入 Babel 轉譯 JSX -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel" data-type="module">
+  // 載入 React 與 ReactDOM
+  import React from "https://esm.sh/react@19/?dev"
+  import ReactDOMClient from "https://esm.sh/react-dom@19/client?dev"
+
+  // 建立 React root，負責後續的渲染與更新
+  const el = document.querySelector('#root')
+  const root = ReactDOMClient.createRoot(el)
+
+  // 定義 App 函式元件，命名遵循大駝峰
+  const App = () => {
+    return <h1>React 環境安裝</h1>
+  }
+
+  // 渲染 App 元件
+  root.render(<App />)
+</script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

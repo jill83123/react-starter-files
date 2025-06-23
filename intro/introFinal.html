@@ -2,57 +2,76 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">章節挑戰</h1><small>檔名：<code>introFinal.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
-<!-- 圖片連結
-  https://images.unsplash.com/photo-1520013573795-38516d2661e4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1536&q=80
-  https://images.unsplash.com/photo-1618038483079-bfe64dcb17f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80
-  https://images.unsplash.com/photo-1546552696-7d5f4e89b0e8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80
- -->
 <div id="root"></div>
-<!-- <div class="row row-cols-3">
-  <div class="col">
-    <a class="card" target="_blank" href="https://www.google.com.tw/" >
-      <img src="https://images.unsplash.com/photo-1520013573795-38516d2661e4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1536&q=80" class="card-img-top object-fit" alt="...">
-      <div class="card-body">
-        <span class="text-dark">清潔力超強牙刷</span>
-        <span class="float-end">$99</span>
-      </div>
-    </a>
-  </div>
-  <div class="col">
-    <a class="card" target="_blank" href="https://twitter.com/" >
-      <img src="https://images.unsplash.com/photo-1618038483079-bfe64dcb17f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" class="card-img-top object-fit" alt="...">
-      <div class="card-body">
-        <span class="text-dark">洗刷刷海綿</span>
-        <span class="float-end">$65</span>
-      </div>
-    </a>
-  </div>
-  <div class="col">
-    <a class="card" target="_blank" href="https://www.facebook.com/WccCasper" >
-      <img src="https://images.unsplash.com/photo-1546552696-7d5f4e89b0e8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" class="card-img-top object-fit" alt="...">
-      <div class="card-body">
-        <span class="text-dark">萬用掛勾</span>
-        <span class="float-end">$120</span>
-      </div>
-    </a>
-  </div>
-</div> -->
-<style>
-  /* .object-fit {
-    object-fit: cover;
+
+<script type="text/babel">
+  const products = [
+    {
+      id: '1',
+      title: '清潔力超強牙刷',
+      imageUrl: 'https://images.unsplash.com/photo-1520013573795-38516d2661e4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1536&q=80',
+      price: 99,
+      link: 'https://www.google.com/',
+    },
+    {
+      id: '2',
+      title: '洗刷刷海綿',
+      imageUrl: 'https://images.unsplash.com/photo-1618038483079-bfe64dcb17f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+      price: 65,
+      link: 'https://www.google.com/',
+    },
+    {
+      id: '3',
+      title: '萬用掛勾',
+      imageUrl: 'https://images.unsplash.com/photo-1546552696-7d5f4e89b0e8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+      price: 120,
+      link: 'https://www.google.com/',
+    },
+  ]
+
+  function App() {
+    return (
+      <>
+        <ul className="row row-cols-3 list-unstyled">
+          {products.map((product) => (
+            <li key={product.id} className="col" >
+              <a href={product.link} target="_blank" className="card" >
+                <img src={product.imageUrl} alt={product.title} className="card-img-top" />
+
+                <div className="card-body d-flex justify-content-between align-items-center">
+                  <h2 className="card-title text-dark fs-4 mb-0">{product.title}</h2>
+                  <p className="card-text">$ {product.price}</p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
   }
+
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
+</script>
+
+<style>
   .card-img-top {
     height: 250px;
+    object-fit: cover;
   }
+
   a.card {
     text-decoration: none;
-    transition: transform .5s, box-shadow .5s;
+    transition: transform .3s, box-shadow .3s;
   }
+
   a.card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 0 10px rgba(0, 0, 0, .26);
-  } */
+    box-shadow: 0 0 10px rgba(0, 0, 0, .16);
+  }
 </style>
 
 <!-- 🙇🙇練習結束🙇🙇 -->
