@@ -2,69 +2,80 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">物件參考特性</h1><small>檔名：<code>objectReference.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-// #1 物件是以傳參考的形式賦值
-// const person = {
-//   name: '小明',
-//   obj: {}
-// }
-
-
-// #2 陷阱
-// const fn = (item) => {
-//   item.name = '杰倫';
-//   // ...
-// }
-
-
-// 關於：這樣的錯誤，ESLint 也有建議不要這麼做（但你是有經驗的開發者時，下方也有提供關閉的方式）
-// https://cn.eslint.org/docs/rules/no-param-reassign
-
-// #3 解決方案
-// #3-1 淺層拷貝
-// const person = {
-//   name: '小明',
-//   obj: {}
-// }
-
-
-// #3-2 深層拷貝
-// const person = {
-//   name: '小明',
-//   obj: {}
-// }
-
-const Card = ({ person }) => {
-  return <div className="card">
-    <div className="card-body">
-      {person.name}
-    </div>
-  </div>
-}
-
-const App = () => {
-  const [person, setPerson] = React.useState({
-    name: '卡斯伯',
-    text: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptates quibusdam, at aperiam qui, accusantium alias, neque dolor ea ratione nesciunt velit rerum consectetur modi harum deserunt perferendis culpa quaerat facilis?'
-  });
-
-  const changePersonName = (e) => {
-    const value = e.target.value;
-    setPerson({...person, name: value });
+  // #1 物件是以傳參考的形式賦值
+  const person = {
+    name: '小明',
+    obj: {}
   }
 
-  return <div>
-    <input type="text" className="form-control" onChange={changePersonName} value={person.name} />
-    <Card person={person}></Card>
-  </div>
-}
+  const person2 = person;
+  console.log(person2 === person); // true
 
-ReactDOM.createRoot(document.getElementById('root'))
-  .render(<App />)
 
+  // #2 陷阱
+  // 關於：這樣的錯誤，ESLint 也有建議不要這麼做（但你是有經驗的開發者時，下方也有提供關閉的方式）
+  // https://cn.eslint.org/docs/rules/no-param-reassign
+  const fn = (item) => {
+    item.name = '杰倫';
+    // ...
+  }
+
+  fn(person);
+  console.log(person.name); // '杰倫'
+
+
+  // #3 解決方案
+  // #3-1 淺層拷貝
+  // const person3 = Object.assign({}, person);
+  const person3 = { ...person };
+  console.log(person3 === person); // false
+  console.log(person3.obj === person.obj); // true
+
+  // #3-2 深層拷貝
+  const person4 = JSON.parse(JSON.stringify(person));
+  console.log(person4.obj === person.obj); // false
+
+
+  // #4 在 React 的運用
+  const Card = ({ person, changePersonName }) => {
+    return (
+      <div className="card">
+        <div className="card-body">
+          {person.name}
+          <input type="text" className="form-control" onChange={changePersonName} value={person.name} />
+        </div>
+      </div>
+    )
+  }
+
+  const App = () => {
+    const [person, setPerson] = React.useState({
+      name: '卡斯伯',
+    });
+
+    const changePersonName = (e) => {
+      const value = e.target.value;
+      setPerson({ ...person, name: value });
+    }
+
+    return (
+      <div>
+        <input type="text" className="form-control" onChange={changePersonName} value={person.name} />
+        <Card person={person} changePersonName={changePersonName} />
+      </div>
+    );
+  }
+
+  ReactDOM
+    .createRoot(document.getElementById('root'))
+    .render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

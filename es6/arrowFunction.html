@@ -2,50 +2,69 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">箭頭函式</h1><small>檔名：<code>arrowFunction.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-// #1 箭頭函式改寫
-function fn(a, b) {
-  return a * b;
-}
-console.log(fn(2, 4));
+  // #1 箭頭函式改寫
+  // function fn(a, b) {
+  //   return a * b;
+  // }
+
+  const fn = (a, b) => a * b;
+  console.log(fn(2, 4));
 
 
-// #2 箭頭函式的 this 變化（React Hook 寫法不太會踩到這個雷）
-// var name = '全域'
-// const person = {
-//   name: '小明',
-//   callName: function () { 
-//     console.log('1', this.name); // 1 小明
-//     setTimeout(function () {
-//       console.log('2', this.name); // 2
-//       console.log('3', this); // 3
-//     }, 10);
-//   },
-// }
-// person.callName();
+  // #2 箭頭函式的 this 變化（React Hook 寫法不太會踩到這個雷）
+  var name = '全域'
+  const person = {
+    name: '小明',
+    callName: function () {
+      console.log('1', this.name); // 1 小明
+      setTimeout(function () {
+        console.log('2', this.name); // 2 全域
+        console.log('3', this); // 3 Window
+      }, 10);
+    },
+  }
+  person.callName();
 
 
+  // #3 箭頭函式在 React 的運用
+  // function Card() {
+  //   return <div className="card">
+  //     <div className="card-body">這是一張卡片</div>
+  //   </div>
+  // }
+  // function App() {
+  //   return (
+  //     <div>
+  //       <Card></Card>
+  //     </div>
+  //   )
+  // }
 
-// #3 箭頭函式在 React 的運用
-function Card() {
-  return <div className="card">
-    <div className="card-body">這是一張卡片</div>
-  </div>
-}
-function App() {
-  return (
-    <div>
-      <Card></Card>
-    </div>
-  )
-}
+  const Card = () => {
+    return (
+      <div className="card">
+        <div className="card-body">這是一張卡片</div>
+      </div>
+    )
+  }
+  const App = () => {
+    return (
+      <div>
+        <Card></Card>
+      </div>
+    )
+  }
 
-ReactDOM
-  .createRoot(document.getElementById('root'))
-  .render(<App></App>)
+  ReactDOM
+    .createRoot(document.getElementById('root'))
+    .render(<App></App>)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

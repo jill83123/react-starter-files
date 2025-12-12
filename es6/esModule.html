@@ -2,36 +2,51 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">ES 模組</h1><small>檔名：<code>esModule.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
-<script>
-// 因為 type="text/babel" 與 type="module" 相衝，所以課程前期不會用到 ESModule 定義元件
-// #1 匯出匯入本一體，先掌握匯出更容易理解匯入
-// #1-1 將標籤定義 <script type="module">
-// #1-2 預設匯出：defaultExport.js
-// 常見的匯出方式，通常用於匯出物件，在 React 開發中可用來匯出元件
 
-// #1-3 具名匯出：namedExport.js
-// 可用於匯出已定義的變數、物件、函式，專案開發中通常用於 “方法匯出”
-// 第三方的框架、函式、套件很常使用具名定義 “方法”
+<script type="module">
+  // 因為 type="text/babel" 與 type="module" 相衝，所以課程前期不會用到 ESModule 定義元件
+  // 瀏覽器同時加載 Babel 及使用 ESModule 的方式參考：https://stackoverflow.com/questions/54018182/how-to-make-script-type-both-text-babel-and-module
 
-// #2 匯入方法
-// #2-1 預設匯入
-// 因為預設匯出沒有名字，所以可以為它命名
+  // #1 匯出匯入本一體，先掌握匯出更容易理解匯入
+  // #1-1 將標籤定義 <script type="module">
 
+  // #1-2 預設匯出：defaultExport.js
+  // 常見的匯出方式，通常用於匯出物件，在 React 開發中可用來匯出元件
+  // 每個模組（檔案）只能有一個預設匯出
 
-// #2-2 具名匯入
-// 單一匯入（建議寫法）
+  // #1-3 具名匯出：namedExport.js
+  // 可用於匯出已定義的變數、物件、函式，專案開發中通常用於 “方法匯出”
+  // 第三方的框架、函式、套件很常使用具名定義 “方法”
 
 
-// 全部匯入（不建議，錯誤較難發現）
+  // #2 匯入方法
+  // #2-1 預設匯入
+  // 因為預設匯出沒有名字，所以可以為它命名
+  import fn from './defaultExport.js';
+  fn();
+
+  // #2-2 具名匯入
+  // 單一匯入（建議寫法）
+  import { a, b } from './namedExport.js';
+  console.log('a:', a);
+  b();
+
+  // 全部匯入（不建議，錯誤較難發現）
+  import * as all from './namedExport.js';
+  console.log('all:', all);
+  console.log('all.a:', all.a);
 
 
-// #3 SideEffect
-// sideEffect.js（沒有包含匯出的檔案）
-
-
+  // #3 SideEffect
+  // sideEffect.js（沒有 export 的檔案）
+  // 較舊的框架、函式庫會使用這種方式立即執行，例如：jQuery
+  import './sideEffect.js';
+  console.log($);
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

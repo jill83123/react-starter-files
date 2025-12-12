@@ -2,26 +2,41 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">Async / Await</h1><small>檔名：<code>asyncAwait.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <!-- 本章節額外載入的遠端套件 -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
-
-// #1 當資料有順序性的時候
-
-
-// #2 使用 async await 來修改
-
-
-
-// #3 立即函式的寫法
-
-
-
+  // #1 當資料有順序性的時候
+  // axios.get('https://randomuser.me/api/')
+  //   .then((res) => {
+  //     console.log(res.data);
+  //     const { seed } = res.data.info;
+  //     return axios.get(`https://randomuser.me/api/?seed=${seed}`);
+  //   })
+  //   .then((res) => {
+  //     console.log(res.data);
+  //   });
 
 
+  // #2 使用 async await 來修改
+  const getUserData = async () => {
+    const { data: data1 } = await axios.get('https://randomuser.me/api/');
+    const { seed } = data1.info;
+    const { data: data2 } = await axios.get(`https://randomuser.me/api/?seed=${seed}`);
+    console.log(data1, data2);
+  }
 
+  getUserData();
+
+
+  // #3 立即函式的寫法
+  (async () => {
+    // 要執行的程式碼
+  })();
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

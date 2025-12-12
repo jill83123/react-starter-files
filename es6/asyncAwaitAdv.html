@@ -2,48 +2,77 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">Async / Await 進階</h1><small>檔名：<code>asyncAwaitAdv.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <!-- 本章節額外載入的遠端套件 -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script type="text/babel">
-// #1 Async function 的本質
-// const asyncFn = async () => {
-//   const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
-// }
+  // #1 Async function 的本質
+  // 1. 本身就是 Promise
+  // 2. await 後面必須接 Promise
+
+  const asyncFn = async () => {
+    const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+    return res.data;
+  }
+
+  console.log(asyncFn()); // Promise {<pending>}
 
 
-
-// #2 Async function 回傳值
-
-// 取得 async function 回傳值得方法
-
-
-// #3 Async function 錯誤處理
-
+  // #2 Async function 回傳值
+  // 取得 async function 回傳值的方法
+  asyncFn()
+    .then((data) => {
+      console.log(data);
+    });
 
 
-// async Function 與 React
-const App = () => {
-  const [data, setData] = React.useState({}) 
+  // #3 Async function 錯誤處理
+  // try...catch
+  const getTodo = async () => {
+    try {
+      const res = await axios.get('https://jsonplaceholder.typicode.com/todos2/1');
+      return res.data;
+    } catch (err) {
+      throw err;
+    }
+  }
 
-  React.useEffect(() => {
-    (async () => {
-      const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
-      console.log(res);
-      setData(res.data);
-    })();
-  }, []);
+  getTodo()
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log('error', err);
+    });
 
-  return <div>
-    {data.title}
-  </div>
-}
 
-ReactDOM
-  .createRoot(document.getElementById('root'))
-  .render(<App/>)
+  // #4 async Function 與 React
+  const App = () => {
+    const [data, setData] = React.useState({})
+
+    React.useEffect(() => {
+      (async () => {
+        const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+        setData(res.data);
+      })();
+    }, []);
+
+    return (
+      <div>
+        {data.title}
+      </div>
+    )
+  }
+
+  ReactDOM
+    .createRoot(document.getElementById('root'))
+    .render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   
