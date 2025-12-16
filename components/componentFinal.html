@@ -2,8 +2,8 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">元件最終挑戰</h1><small>檔名：<code>componentFinal.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
 
+<!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -11,78 +11,90 @@
   // 資料來源：https://data.gov.tw/dataset/6069
   // 天氣圖示：https://www.cwb.gov.tw/V8/C/K/Weather_Icon.html
   // 因為氣象圖示相當多，所以本範例中僅採用已下載天氣資料為主，其餘圖示同學可至上方氣象局網站下載
+
   (async () => {
-    const data = await axios.get('./F-C0032-001.json');
-    const { location } = data.data.cwbopendata.dataset;
-    const options = { hour: 'numeric', minute: 'numeric' }
+    const res = await axios.get('./F-C0032-001.json');
+    const { location } = res.data.cwbopendata.dataset;
     console.log(location);
 
-    const Time = ({ startTime, endTime }) => {
-      return (<div className="text-center">
-        <div className="h4">{new Date(startTime).toLocaleDateString(undefined, { day: 'numeric'})}</div>
-        {new Date(startTime).toLocaleString(undefined, options)} <br />
-          ~ <br />
-        {new Date(endTime).toLocaleString(undefined, options)}
-      </div>)
-    }
-
-    const Card = ({ title, wx, pop }) => {
-      return (
-        <div className='card text-center'>
-          <div className='card-header'>
-            <h4 className='my-0'>{title}</h4>
-          </div>
-          <div className='card-body'>
-            <div className="row row-cols-3">
-              {wx.time.map((time, key) => (
-                <div className="col" key={key}>
-                  <Time startTime={time.startTime} endTime={time.endTime}></Time>
-                  <img src={`./weatherIcon/${time.parameter.parameterName}.svg`} alt={time.parameter.parameterName} className="img-fluid mt-3"/>
-                  <div className="mt-2">{time.parameter.parameterName}</div>
-                  <div className="mt-3">
-                    <i className="bi bi-umbrella-fill"></i> {pop.time[key].parameter.parameterName}%
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
+    const formatDate = (dateString, type = 'day') => {
+      let options = {};
+      switch (type) {
+        case 'day':
+          options = { day: 'numeric' };
+          break;
+        case 'time':
+          options = { hour: 'numeric', minute: 'numeric' };
+          break;
+        default:
+          options = {};
+      }
+      return new Date(dateString).toLocaleString(undefined, options);
     };
 
-    const Weather = ({children}) => {
-      return (<>
-        {children}
-        <div className='row row-cols-2 g-4'>
-          {location.map((city) => {
-            return (
-              <div className='col' key={city.locationName}>
-                {/* city.weatherElement[0] 天氣概況 */}
-                {/* city.weatherElement[1] 最高氣溫 */}
-                {/* Pop city.weatherElement[4] 降雨率 */}
-                <Card
-                  title={city.locationName}
-                  wx={city.weatherElement[0]} 
-                  pop={city.weatherElement[4]}
-                ></Card>
-              </div>
-            );
-          })}
+    const Card = (({ locationName, wx, pop }) => {
+      return (
+        <div className="card text-center">
+          <div className="card-header">
+            <h2 className="h4 my-0">{locationName}</h2>
+          </div>
+
+          <div className="card-body">
+            <ul className="row row-cols-3 g-3 list-unstyled">
+              {
+                wx.time.map((item, index) => {
+                  const { parameterName } = item.parameter;
+                  return (
+                    <li key={index} className="col">
+                      <h3 className="h4 mt-0 mb-2">{formatDate(item.startTime, 'day')}</h3>
+                      <p className="mb-0">
+                        {formatDate(item.startTime, 'time')}
+                        <br />~<br />
+                        {formatDate(item.endTime, 'time')}
+                      </p>
+                      <img
+                        src={`./weatherIcon/${parameterName}.svg`}
+                        alt=""
+                        width="90"
+                        height="90"
+                        className="py-1"
+                      />
+                      <p className="mb-2">{parameterName}</p>
+                      <p className="mb-0">
+                        <i className="bi bi-umbrella-fill" /> {pop.time[index].parameter.parameterName}%
+                      </p>
+                    </li>
+                  )
+                })
+              }
+            </ul>
+          </div>
         </div>
-      </>)
-    }
+      )
+    })
 
     const App = () => {
       return (
         <>
-          <Weather>
-            <h2 className="my-3">三十六小時天氣預報</h2>
-          </Weather>
+          <h1 className="my-3">三十六小時天氣預報</h1>
+          <ul className="row row-cols-2 g-4 list-unstyled">
+            {
+              location.map(({ locationName, weatherElement }) => {
+                return (
+                  <li key={locationName} className="col">
+                    <Card locationName={locationName} wx={weatherElement[0]} pop={weatherElement[4]} />
+                  </li>
+                )
+              })
+            }
+          </ul>
         </>
       );
     };
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    ReactDOM
+      .createRoot(document.getElementById('root'))
+      .render(<App />);
   })();
 </script>
 

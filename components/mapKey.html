@@ -2,85 +2,91 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">為什麼要使用 key 值</h1><small>檔名：<code>mapKey.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
   const App = () => {
-  const originProducts = [
-    {
-      id: 1,
-      title: '編號一：價格 100',
-      price: 100,
-    },
-    {
-      id: 2,
-      title: '編號二：價格 100',
-      price: 100,
-    },
-    {
-      id: 3,
-      title: '編號三：價格 200',
-      price: 200,
-    },
-  ];
-  const [products, setProducts] = React.useState(originProducts)
-
-  const handleDoublePrice = () => {
-    const productByDoublePrice = products.map(item => ({...item, price: item.price * 2}));
-    setProducts(productByDoublePrice);
-    console.log(productByDoublePrice);
-  }
-
-  const handleNewProduct = () => {
-    const newProducts = [{
-      id: new Date().getTime(),
-      title: '新增項目：價格 300',
-      price: 300,
-    }, ...products]
-    setProducts(newProducts);
-    console.log('handleNewProduct', newProducts);
-  }
-
-  return (
-    <>
-      <h3>案例一：當 key 不是唯一值時</h3>
-      {/* 當 key 不是唯一值時 */}
+    const originProducts = [
       {
-        products.map((product, index) => {
-          return <div key={product.price}>{product.title} {product.price}
-            <input type="text" />
-          </div>
-        })
-      }
-      <button type="button" onClick={handleDoublePrice}>雙倍金額</button>
-      
-      <h3>案例二：當 key 為陣列索引時</h3>
-      {/* 當 key 為陣列索引時*/}
-      {JSON.stringify(products)}
-      {/*
-        products.map((product, index) => {
-          return <div key={index}>{product.title} {product.price}
-            <input type="text" />
-          </div>
-        })
-      */}
-      <button type="button" onClick={handleNewProduct}>新增</button>
+        id: 1,
+        title: '編號一：價格 100 元',
+        price: 100,
+      },
+      {
+        id: 2,
+        title: '編號二：價格 100 元',
+        price: 100,
+      },
+      {
+        id: 3,
+        title: '編號三：價格 200 元',
+        price: 200,
+      },
+    ];
+    const [products, setProducts] = React.useState(originProducts)
 
-      <h3>建議：key 為唯一值</h3>
-      {/*
-        products.map((product, index) => {
-          return <div key={product.id}>{product.title} {product.price}
-            <input type="text" />
-          </div>
-        })
-      */}
-    </>
-  )
-}
+    const handleDoublePrice = () => {
+      const productByDoublePrice = products.map(item => ({ ...item, price: item.price * 2 }));
+      setProducts(productByDoublePrice);
+      console.log(productByDoublePrice);
+    }
 
-ReactDOM.createRoot(document.getElementById('root'))
-  .render(<App/>)
+    const handleNewProduct = () => {
+      const newProducts = [{
+        id: new Date().getTime(),
+        title: '新增項目：價格 300',
+        price: 300,
+      }, ...products]
+      setProducts(newProducts);
+      console.log('handleNewProduct', newProducts);
+    }
+
+    return (
+      <>
+        <h3>案例一：當 key 不是唯一值時</h3>
+        {
+          products.map((product, index) => (
+            <div key={product.price}>
+              {product.title} {product.price}
+              <input type="text" />
+            </div>
+          ))
+        }
+        <button type="button" onClick={handleDoublePrice}>雙倍金額</button>
+
+        <h3>案例二：當 key 為陣列索引時</h3>
+        {
+          products.map((product, index) => (
+            <div key={index}>
+              {product.title} {product.price}
+              <input type="text" />
+            </div>
+          ))
+        }
+        <button type="button" onClick={handleNewProduct}>新增</button>
+
+        <h3>建議：key 為唯一值</h3>
+        {
+          products.map((product, index) => (
+            <div key={product.id}>
+              {product.title} {product.price}
+              <input type="text" />
+            </div>
+          ))
+        }
+
+        <pre>{JSON.stringify(products, null, 2)}</pre>
+      </>
+    )
+  }
+
+  ReactDOM
+    .createRoot(document.getElementById('root'))
+    .render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   
