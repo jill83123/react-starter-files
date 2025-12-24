@@ -2,76 +2,221 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">useEffect 移除監聽</h1><small>檔名：<code>useEffectRemoveListener.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
-<!--  -->
 <div id="root"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+
 <script type="text/babel">
-const { useState, useEffect, useRef } = React;
-const api = 'https://api.unsplash.com/search/photos/';
-const accessKey = 'GAvxZ9VesndxTx_9NftqgOtZffnTB0YhfGiWGDJA-bs';
+  const { useState, useEffect, useRef } = React;
+  const api = 'https://api.unsplash.com/search/photos/';
+  const accessKey = 'GAvxZ9VesndxTx_9NftqgOtZffnTB0YhfGiWGDJA-bs';
 
-const Card = ({item}) => {
-  return <div className="card">
-    <img className="card-img img-cover" width="100%" height="400"
-    src={`${item.urls.raw}&w=600&q=80`} alt="" />
-  </div>
-}
+  const Loading = ({ isShow }) => {
+    return (
+      <div className={`loading text-center ${isShow ? 'show' : ''}`}>
+        <div className="spinner-border text-info" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  };
 
-const SearchBox = ({onSearchHandler, filterString}) => {
-  return <div>
-    <label htmlFor="filter">搜尋</label>
-    <input type="text" id="filter" className="form-control"
-      value={filterString}
-      onChange={onSearchHandler}
-    />
-  </div>
-}
+  const Card = ({ item, getSinglePhoto }) => {
+    const handleClick = (e) => {
+      e.preventDefault();
+      getSinglePhoto(item.id);
+    };
 
-let currentPage = 1;
-const App = () => {
-  const [filterString, setFilterString] = useState('animal');
-  const [jsonData, setJsonData] = useState([]);
-  const onSearchHandler = (e) => {
-    setFilterString(e.target.value);
-  }
+    return (
+      <a href="#" className="card" onClick={handleClick}>
+        <img
+          className="card-img img-cover"
+          src={`${item.urls.raw}&w=600&q=80`}
+          alt={item.alt_description}
+          width="100%"
+          height="400"
+        />
+      </a>
+    )
+  };
 
-  useEffect(() => {
-    (async () => {
+  const SearchBox = ({ onSearchHandler, filterString }) => {
+    return (
+      <div className="mb-3">
+        <label htmlFor="filter" className="form-label">搜尋</label>
+        <input
+          type="text"
+          id="filter"
+          className="form-control"
+          defaultValue={filterString}
+          onKeyPress={onSearchHandler}
+        />
+      </div>
+    )
+  };
+
+  const App = () => {
+    const [rateRemaining, setRateRemaining] = useState(0);
+
+    const [photoList, setPhotoList] = useState([]);
+    const [keyword, setKeyword] = useState('animal');
+    const currentPage = useRef(1);
+    const listBottomRef = useRef(null);
+
+    const [singlePhoto, setSinglePhoto] = useState({});
+    const modalRef = useRef(null);
+    const modal = useRef(null);
+
+    const isLoadingRef = useRef(false);
+    const [isLoadingState, setIsLoadingState] = useState(false);
+
+    const setLoading = (value) => {
+      isLoadingRef.current = value;
+      setIsLoadingState(value);
+    };
+
+    // Loading 效果處理
+    useEffect(() => {
+      const body = document.querySelector('body');
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+      body.classList.toggle('overflow-hidden', isLoadingState);
+      body.style.paddingRight = isLoadingState ? `${scrollBarWidth}px` : '0px';
+    }, [isLoadingState]);
+
+    const getPhotoList = async ({ page = 1, isNewSearch = true } = {}) => {
       try {
-        // 搜尋特定需要加入 query
-        const result = await axios.get(`${api}?client_id=${accessKey}&query=${filterString}`);
-        console.log(result);
-        setJsonData(result.data.results);
+        setLoading(true);
+        const res = await axios.get(`${api}?client_id=${accessKey}&query=${keyword}&page=${page}`);
+        // console.log(result);
+
+        if (isNewSearch) {
+          currentPage.current = 1;
+          setPhotoList(res.data.results);
+        } else {
+          setPhotoList((preData) => [...preData, ...res.data.results]);
+        }
+
+        setRateRemaining(res.headers['x-ratelimit-remaining']);
       } catch (error) {
         console.log(error);
+      } finally {
+        setTimeout(() => { setLoading(false) }, 500);
       }
-    })();
-  }, [])
-  
-  return (<div>
-    <SearchBox onSearchHandler={onSearchHandler} filterString={filterString} />
-    <div className='row row-cols-2 g-3'>
-      { jsonData.map((item) => 
-        <div className="col" key={item.id}>
-          <Card item={item} />
+    };
+
+    const getSinglePhoto = async (id) => {
+      try {
+        setLoading(true);
+        setSinglePhoto({});
+
+        const baseUrl = `https://api.unsplash.com/photos`;
+        const res = await axios.get(`${baseUrl}/${id}?client_id=${accessKey}`);
+
+        setSinglePhoto(res.data);
+        modal.current.show();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setTimeout(() => { setLoading(false) }, 500);
+      }
+    };
+
+    // 滾動載入
+    useEffect(() => {
+      // const lazyLoad = () => {
+      //   const height = listRef.current.offsetTop + listRef.current.offsetHeight - window.innerHeight;
+      //   if (!isLoading.current && window.scrollY > height) {
+      //     getPhotoList({ page: ++currentPage.current, isNewSearch: false });
+      //   }
+      // }
+      const observer = new IntersectionObserver((entries) => {
+        if (!isLoadingRef.current && entries[0].isIntersecting) {
+          getPhotoList({ page: ++currentPage.current, isNewSearch: false });
+        }
+      }, { threshold: 1.0 });
+
+      (async () => {
+        await getPhotoList();
+
+        // window.addEventListener('scroll', lazyLoad);
+        observer.observe(listBottomRef.current);
+      })();
+
+      // return () => window.removeEventListener('scroll', lazyLoad);
+      return () => observer.disconnect();
+    }, [keyword]);
+
+    // Bootstrap Modal 初始化
+    useEffect(() => {
+      modal.current = new bootstrap.Modal(modalRef.current);
+    }, []);
+
+    const onSearchHandler = (e) => {
+      if (e.key === 'Enter') {
+        setKeyword(e.target.value);
+      }
+    };
+
+    return (
+      <>
+        <Loading isShow={isLoadingState} />
+
+        <SearchBox onSearchHandler={onSearchHandler} filterString={keyword} />
+        <p>剩餘請求次數：{rateRemaining}</p>
+        <div className='row row-cols-2 g-3'>
+          {
+            photoList.map((item) => (
+              <div className="col" key={item.id}>
+                <Card item={item} getSinglePhoto={getSinglePhoto} />
+              </div>
+            ))
+          }
         </div>
-      )}
-    </div>
-  </div>)
-}
+        <div ref={listBottomRef} aria-hidden="true" style={{ height: 1 }} />
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+        <div ref={modalRef} className="modal" tabIndex="-1">
+          <div className="modal-dialog modal-xl modal-dialog-centered">
+            <img
+              src={singlePhoto.urls?.regular || ''}
+              alt={singlePhoto.alt_description || ''}
+              className="img-contain mx-auto pe-auto"
+              style={{ height: 'calc(100vh - 200px)' }} />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
 </script>
-
 
 <style>
   /* CSS 樣式，可以確保圖片不要變形 */
   .img-cover {
     object-fit: cover;
   }
+  .img-contain {
+    object-fit: contain;
+  }
+
+  .loading {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    border-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+  .loading.show {
+    display: flex;
+  }
 </style>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

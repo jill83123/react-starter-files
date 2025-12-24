@@ -2,21 +2,36 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">開始使用 Hooks</h1><small>檔名：<code>startHooks.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-// #1 取出 useState 的方法
+  // #1 取出 useState 的方法
+  const { useState } = React;
 
-const App = () => {
-  // #2 定義狀態
-  return (<div>
-    {/* 使用 set 將值寫入 */}
-    </div>)
-}
+  const App = () => {
+    // #2 定義狀態
+    const [num, setNum] = useState(0);
+    const incrementNum = () => {
+      setNum(num + 1);
+      console.log(num); // 這裡的 num 為舊值，因為 setNum 是非同步方法
+    };
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+    return (
+      <>
+        <h1>{num}</h1>
+        {/* 使用 set 將值寫入 */}
+        <button type="button" onClick={incrementNum}> + 1 </button>
+      </>
+    )
+  }
+
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

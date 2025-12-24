@@ -2,62 +2,111 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">Bootstrap 元件與 React</h1><small>檔名：<code>bootstrapComponent.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
-<!-- 原生 Bootstrap  -->
-<script>
-  // ## Modal
-  // // #1 生成實體
 
-  // // #2 套用實體方法
+<!-- 🔥🔥練習開始🔥🔥 -->
+<!-- 原生 Bootstrap -->
+<button type="button" id="exampleModalBtn" class="btn btn-primary mb-2">原生 JS 打開 Modal</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // #1 生成 Modal 實體
+  const exampleModal = new bootstrap.Modal('#exampleModal');
+
+  // #2 套用實體方法
+  const exampleModalBtn = document.querySelector('#exampleModalBtn');
+  exampleModalBtn.addEventListener('click', function () {
+    exampleModal.show();
+  });
 
   // #3 套用監聽
+  const exampleModalEl = document.querySelector('#exampleModal')
+  exampleModalEl.addEventListener('shown.bs.modal', (event) => {
+    console.log('Modal 已完全打開');
+  })
 </script>
-<!--  -->
+
+<!-- 在 React 中運行 Bootstrap -->
 <div id="root"></div>
+
 <script type="text/babel">
-const { useState, useEffect } = React;
+  const { useState, useEffect } = React;
+
+  let newModal = null;
+
+  const App = () => {
+    // #1 在 React 中套用 Bootstrap 語法
+    // #1-1 錯誤寫法（DOM 尚未生成）
+    // Cannot read properties of undefined
+    // const newModal = new bootstrap.Modal('#newModal');
+
+    // #1-2 DOM 已經生成
+    useEffect(() => {
+      // ...此時 DOM 已生成
+    });
 
 
-const App = () => {
-  // #1 在 React 中套用 Bootstrap 語法
-  // #1-1 錯誤寫法（DOM 尚未生成）
+    // #2 錯誤寫法
+    // 2-1 作用域錯誤
+    // openModal 無法取得此處的 newModal
+    // useEffect(() => {
+    //   const newModal = new bootstrap.Modal('#newModal');
+    // });
 
-  // #1-2 DOM 已經生成
+    // 2-2 操作
+    useEffect(() => {
+      newModal = new bootstrap.Modal('#newModal');
+    }, []);
 
+    const openModal = () => {
+      newModal && newModal.show();
+    };
 
-  // #2 錯誤寫法
-  // 2-1 作用域錯誤
+    return (
+      <>
+        <button type="button" className="btn btn-primary" onClick={openModal}>在 React 打開 Modal</button>
 
-  // 2-2 操作
-
-  return (
-    <>
-      <button type="button" className="btn btn-primary" >打開 Modal</button>
-      <div className="modal fade" tabIndex="-1" id="newModal">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Modal title</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <p>Modal body text goes here.</p>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary">Save changes</button>
+        <div className="modal fade" tabIndex="-1" id="newModal">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title mt-0">Modal title</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <p>Modal body text goes here.</p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" className="btn btn-primary">Save changes</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
-  );
-}
+      </>
+    );
+  }
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
 </script>
-
 
 <style>
   /* CSS 樣式，可以確保圖片不要變形 */
@@ -65,6 +114,7 @@ ReactDOM.createRoot(document.querySelector('#root'))
     object-fit: cover;
   }
 </style>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

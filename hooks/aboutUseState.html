@@ -2,31 +2,70 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">關於 useState</h1><small>檔名：<code>aboutUseState.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-// #1 useState 的方法在哪裡？
+  // #1 useState 的方法在哪裡？
+  const { useState } = React;
 
-// #2 useState 僅能在 Component 內運作
+
+  // #2 useState 僅能在 Component 內運作
+  // const [test, setTest] = useState(0);
+  // Invalid hook call. Hooks can only be called inside of the body of a function component.
 
 
-// #3 state 是 ReadOnly
-// #3-1 為了讓 React 知道資料已更新，所以會使用另一個方法進行觸發
-const App = () => {
+  // #3 state 是 Readonly
+  // #3-1 為了讓 React 知道資料已更新，所以會使用另一個方法進行觸發
   // #3-2 這影響了許多會操作原始值的方法
+  const App = () => {
+    const [arr, setArr] = useState([1, 2, 3]);
 
-  return (<div>
-    
-  </div>)
-}
+    const addArrItem = () => {
+      // setArr(arr.push(arr.length + 1));
+      // ❌ push 會回傳被推入的值，而非新的陣列
 
+      // 需將完整的陣列傳入
+      setArr([...arr, arr.length + 1]);
+    }
 
+    const removeArrItem = () => {
+      // setArr(arr.pop());
+      // ❌ pop 會回傳陣列的最後一個值，而非新的陣列
 
-// #4 state 觸發時，會完整更新 function
+      // 方法 1
+      const newArr = [...arr];
+      newArr.pop();
+      setArr(newArr);
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+      // 方法 2
+      // setArr(arr.filter((item, index) => index !== arr.length - 1));
+    }
+
+    return (
+      <>
+        <ul>
+          {
+            arr.map((item) => {
+              return <li key={item}>{item}</li>
+            })
+          }
+        </ul>
+        <button type="button" onClick={addArrItem}>新增資料</button>
+        <button type="button" onClick={removeArrItem}>移除資料</button>
+      </>
+    )
+  }
+
+  // #4 state 觸發時，會完整更新 function
+  // 當狀態有變動時，整個元件函式會重新執行一次，產生新的畫面內容
+
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

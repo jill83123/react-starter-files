@@ -2,20 +2,50 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">input 元件化</h1><small>檔名：<code>inputComponent.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
-<!--  -->
 <div id="root"></div>
+
 <script type="text/babel">
+  const { useState } = React;
 
-const App = () => {
-  return (<div>
-    
-  </div>)
-}
+  const SearchInput = ({ value, onChange }) => {
+    return (
+      <>
+        <label htmlFor="search" className="form-label">搜尋</label>
+        <input
+          type="text"
+          id="search"
+          className="form-control"
+          placeholder="請輸入文字"
+          value={value}
+          onChange={onChange}
+        />
+      </>
+    )
+  }
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+  const App = () => {
+    const [text, setText] = useState('這是一段文字');
+
+    const handleSearch = (e) => {
+      setText(e.target.value);
+    }
+
+    return (
+      <>
+        <SearchInput value={text} onChange={handleSearch} />
+        <hr />
+        {text}
+      </>
+    )
+  }
+
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   
