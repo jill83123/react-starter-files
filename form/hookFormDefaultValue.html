@@ -2,53 +2,80 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">React Hook Form 控制值</h1><small>檔名：<code>hookFormDefaultValue.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
 
+<!-- 🔥🔥練習開始🔥🔥 -->
 <div id="app"></div>
-<script src="https://cdn.jsdelivr.net/npm/react-hook-form@7.33.1/dist/index.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-hook-form@7/dist/index.umd.min.js"></script>
+
 <script type="text/babel">
-  const { useState, useEffect } = React;
-  const { useForm } = ReactHookForm;
+  const { useState, useEffect, useRef } = React;
+  const { useForm, useWatch } = ReactHookForm;
 
   const App = () => {
-    const {
-      register,
-      handleSubmit,
-    } = useForm();
+    const renderCount = useRef(0);
+    renderCount.current += 1;
+    console.log('元件刷新次數:', renderCount.current);
+
+    const defaultValues = { username: 'Jill' };
+    const { register, handleSubmit, watch, setValue, control } = useForm({ defaultValues });
+
+    // #1 watch
+    // 監聽全部 -> watch()
+    // 監聽部分 -> watch('欄位名稱') or watch(['欄位1', '欄位2'])
+    // 在子層元件監聽父層時，會刷新父層元件
+
+    // #1-1 使用方式一：可以顯示在畫面上，並且欄位值改變時會刷新元件
+    // const username = watch('username');
+
+    // #1-2 使用方式二：監聽所有欄位，欄位值改變時不會刷新元件，在 unmount 需清除監聽
+    useEffect(() => {
+      const subscription = watch((values, attr) => {
+        console.log('watch:', values, attr); // {username: '', …}, {name: 'username', type: 'change', values: {…}}
+
+        if (attr.name === 'like') {
+          setValue('username', values.like[0] || ''); // 修改欄位值
+        }
+      });
+      return () => subscription.unsubscribe();
+    }, [watch]);
+
+    // #2 useWatch
+    // 需要指定是哪一個表單(control)
+    // 監聽全部 -> useWatch({control})
+    // 監聽部分 -> useWatch({control, name: '欄位名稱'}) or useWatch({control, name: ['欄位1', '欄位2']})
+    // 在子層元件監聽父層時，不會刷新父層元件
+
+    // 這個類似 watch 的使用方式一，可以顯示在畫面上，並且欄位值改變時會刷新元件
+    const watchForm = useWatch({ control });
+
+    useEffect(() => {
+      console.log('useWatch:', watchForm); // {username: '', …}
+    }, [watchForm]);
+
     const onSubmit = (data) => {
       console.log(data);
     };
 
-    // #watch 當有值寫入時，可以透過 watch 觸發
-
-    // #useWatch 使用 hook 實作監聽
-
-
     return (
       <div>
-        <form action='' onSubmit={handleSubmit(onSubmit)}>
+        {watchForm.username && <h2>歡迎，{watchForm.username}！</h2>}
+
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='mb-3'>
-            <label htmlFor='username' className='form-label'>
-              使用者名稱
-            </label>
-            <input
-              id='username'
-              type='text'
-              {...register('username')}
-              className='form-control'
-            />
+            <label htmlFor='username' className='form-label'>使用者名稱</label>
+            <input id='username' type=' text'{...register('username')} className='form-control' />
           </div>
-          <div className="mb-3"> 
-          <label htmlFor="checkList1">炒麵</label>
-            <input id="checkList1" type="checkbox" name="like" value='炒麵' />
+
+          <div className="mb-3">
+            <input id="checkList1" type="checkbox" value='炒麵' {...register('like')} />
+            <label htmlFor="checkList1">炒麵</label>
+            <input id="checkList2" type="checkbox" value='鍋燒意麵' {...register('like')} />
             <label htmlFor="checkList2">鍋燒意麵</label>
-            <input id="checkList2" type="checkbox" name="like" value='鍋燒意麵' />
+            <input id="checkList3" type="checkbox" value='炸薯條' {...register('like')} />
             <label htmlFor="checkList3">炸薯條</label>
-            <input id="checkList3" type="checkbox" name="like" value='炸薯條' />
           </div>
-          <button type='submit' className='btn btn-primary'>
-            註冊
-          </button>
+
+          <button type='submit' className='btn btn-primary'>註冊</button>
         </form>
       </div>
     );

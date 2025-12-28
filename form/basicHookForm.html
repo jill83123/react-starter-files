@@ -2,17 +2,27 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">React Hook Form 基礎</h1><small>檔名：<code>basicHookForm.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/react-hook-form@7.33.1/dist/index.umd.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/react-hook-form@7/dist/index.umd.min.js"></script>
+
 <div id="app"></div>
+
 <script type="text/babel">
   const { useState, useEffect } = React;
+  const { useForm } = ReactHookForm;
 
   const App = () => {
+    const { register, handleSubmit } = useForm();
+
+    // 自訂方法，data 為 register 所註冊的欄位名稱與值
+    const login = (data) => {
+      console.log(data); // { username: '卡斯伯' }
+    };
 
     return (
       <div>
-        <form action=''>
+        <form onSubmit={handleSubmit(login)}>
           <div className='mb-3'>
             <label htmlFor='username' className='form-label'>
               使用者名稱
@@ -21,6 +31,7 @@
               id='username'
               type='text'
               defaultValue="卡斯伯"
+              {...register('username')}
               className='form-control'
             />
           </div>

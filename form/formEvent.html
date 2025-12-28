@@ -2,42 +2,67 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">表單方法</h1><small>檔名：<code>formEvent.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-  const { useState } = React
+  const { useState } = React;
+
   const App = () => {
     const [search, setSearch] = useState('');
 
-    // 使用 form submit 送出
+    // #1 使用 form submit 送出
+    // 當 <form> 中只有一個欄位時，按下 Enter 鍵會自動觸發 submit 事件
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      console.log('送出搜尋：', search);
+    };
 
+    // #2 Enter custom submit
+    // 可以透過 onKeyDown onKeyPress onKeyUp 等事件來監聽鍵盤
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        console.log('送出搜尋：', search);
+      }
+    };
 
-    // Enter custom submit
+    return (
+      <div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="search2" className="form-label">搜尋</label>
+            <input
+              type="search"
+              name="search"
+              id="search2"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="form-control"
+            />
+          </div>
+        </form>
 
-
-    
-  
-    return (<div>
-      <form>
-        <div className="mb-3">
-          <label htmlFor="search2" className="form-label">搜尋</label>
-          <input id="search2" type="search" className="form-control" name="search"
+        {/* https://reactjs.org/docs/events.html#keyboard-events */}
+        <label htmlFor="search1" className="form-label">搜尋</label>
+        <input
+          type="search"
+          name="search"
+          id="search1"
+          value={search}
           onChange={(e) => setSearch(e.target.value)}
-          value={search} />
-        </div>
-      </form>
-
-      <label htmlFor="search1" className="form-label">搜尋</label>
-      {/* https://reactjs.org/docs/events.html#keyboard-events */}
-      <input id="search1" type="search" className="form-control" name="search"
-      value={search}
-      onChange={(e) => setSearch(e.target.value)} />
-    </div>)
+          onKeyPress={handleKeyPress}
+          className="form-control"
+        />
+      </div>
+    )
   }
-  
-  ReactDOM.createRoot(document.querySelector('#root'))
-    .render(<App/>)
-  </script>
+
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
+</script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

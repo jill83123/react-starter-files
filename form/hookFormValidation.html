@@ -2,10 +2,11 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">React Hook Form 驗證方法</h1><small>檔名：<code>hookFormValidation.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
 
+<!-- 🔥🔥練習開始🔥🔥 -->
 <div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/react-hook-form@7.33.1/dist/index.umd.min.js"></script>
+
 <script type="text/babel">
   const { useState, useEffect } = React;
   const { useForm, useWatch } = ReactHookForm;
@@ -23,78 +24,104 @@
         username: '卡斯伯',
         like: []
       },
-      // 錯誤驗證時機
-      mode: 'onTouched',
+      mode: 'onBlur', // 錯誤驗證時機
     });
+
+    const validationRules = {
+      username: {
+        required: '使用者名稱為必填',
+      },
+      email: {
+        required: 'Email 為必填',
+        pattern: {
+          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+          message: 'Email 格式不正確',
+        },
+      },
+      tel: {
+        required: '電話為必填',
+        pattern: {
+          value: /^[0-9]*$/i,
+          message: '電話只能是數字',
+        },
+        minLength: {
+          value: 6,
+          message: '電話至少 6 碼',
+        },
+        maxLength: {
+          value: 10,
+          message: '電話最多 10 碼',
+        },
+      },
+      like: {
+        required: '喜愛食物為必填',
+        validate: (value) => value.length > 1 || '喜愛食物至少選擇 2 種',
+      },
+    };
+
     const onSubmit = (data) => {
       console.log(data);
     };
 
     return (
       <div>
-        <form action='' onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='mb-3'>
-            <label htmlFor='username' className='form-label'>
-              使用者名稱
-            </label>
+            <label htmlFor='username' className='form-label'>使用者名稱</label>
             <input
               id='username'
               type='text'
-              {...register('username', { required: true })}
+              {...register('username', validationRules.username)}
               className={`form-control ${errors.username && 'is-invalid'}`}
             />
-            {errors.username && (
-              <div className='invalid-feedback'>使用者名稱為必填</div>
-            )}
+            <div className='invalid-feedback'>{errors.username?.message}</div>
           </div>
+
           <div className='mb-3'>
-            <label htmlFor='email' className='form-label'>
-              Email
-            </label>
+            <label htmlFor='email' className='form-label'>Email</label>
             <input
               id='email'
-              type='text'
-              {...register('email')}
+              type='email'
+              {...register('email', validationRules.email)}
               className={`form-control ${errors.email && 'is-invalid'}`}
             />
+            <div className='invalid-feedback'>{errors.email?.message}</div>
           </div>
+
           <div className='mb-3'>
-            <label htmlFor='tel' className='form-label'>
-              電話
-            </label>
+            <label htmlFor='tel' className='form-label'>電話</label>
             <input
               id='tel'
               type='tel'
-              {...register('tel')}
+              {...register('tel', validationRules.tel)}
               className={`form-control ${errors.tel && 'is-invalid'}`}
             />
+            <div className='invalid-feedback'>{errors.tel?.message}</div>
           </div>
-          <div className="mb-3"> 
+
+          <div className="mb-3">
             <div className="form-check">
               <input id="checkList1" type="checkbox"
-              className={`form-check-input ${errors.like && 'is-invalid'}`}
-              {...register('like', {required: true})} name="like" value='炒麵' />
+                className={`form-check-input ${errors.like && 'is-invalid'}`}
+                {...register('like', validationRules.like)} name="like" value='炒麵' />
               <label className='form-check-label' htmlFor="checkList1">炒麵</label>
             </div>
             <div className="form-check">
               <input id="checkList2" type="checkbox"
-              className={`form-check-input ${errors.like && 'is-invalid'}`}
-              {...register('like', {required: true})} name="like" value='鍋燒意麵' />
+                className={`form-check-input ${errors.like && 'is-invalid'}`}
+                {...register('like', validationRules.like)} name="like" value='鍋燒意麵' />
               <label className='form-check-label' htmlFor="checkList2">鍋燒意麵</label>
             </div>
             <div className="form-check">
               <input id="checkList3" type="checkbox"
-              className={`form-check-input ${errors.like && 'is-invalid'}`}
-              {...register('like', {required: true})} name="like" value='炸薯條' />
+                className={`form-check-input ${errors.like && 'is-invalid'}`}
+                {...register('like', validationRules.like)} name="like" value='炸薯條' />
               <label className='form-check-label' htmlFor="checkList3">炸薯條</label>
+              <div className='invalid-feedback'>{errors.like?.message}</div>
             </div>
-            {errors.like && (
-              <div className='invalid-feedback'>請選擇喜愛的食物</div>
-            )}
           </div>
-          <button type='submit' className='btn btn-primary'>
-            註冊
-          </button>
+
+          <button type='submit' className='btn btn-primary'>註冊</button>
         </form>
       </div>
     );

@@ -2,32 +2,89 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">React 與表單元素</h1><small>檔名：<code>reactForm.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-const { useState } = React
-const App = () => {
+  const { useState } = React;
 
-  return (<div>
-  {/* #1 input */}
-  <label htmlFor="username">使用者名稱 </label>
-  <input id="username" type="text"/>
+  const App = () => {
+    const [userName, setUserName] = useState('');
 
-  {/* #2 select 選擇、預設值 */}
-  <select name="" id="" >
-    <option value="" disabled>-- 請選擇地區 --</option>
-  </select>
+    const [area, setArea] = useState('');
+    const areaList = [
+      { value: 'north', text: '北部' },
+      { value: 'central', text: '中部' },
+      { value: 'south', text: '南部' },
+      { value: 'east', text: '東部' },
+    ];
 
-  {/* #3 multiSelect */}
-  <select name="" id="">
+    const [hobby, setHobby] = useState([]);
+    const hobbyList = [
+      { value: 'reading', text: '閱讀' },
+      { value: 'travel', text: '旅遊' },
+      { value: 'swimming', text: '游泳' },
+      { value: 'coding', text: '寫程式' },
+    ];
+    const handleHobbyChange = (e) => {
+      // e.target.selectedOptions 是類陣列，因此需要展開轉為陣列才能使用 map
+      const selectedHobby = [...e.target.selectedOptions].map((option) => option.value);
+      setHobby(selectedHobby);
+    };
 
-  </select>
-  </div>)
-}
+    return (
+      <>
+        <div className="mb-3">
+          {/* #1 input */}
+          <label htmlFor="username">使用者名稱</label>
+          <br />
+          <input type="text" id="username" value={userName} onChange={(e) => setUserName(e.target.value)} />
+        </div>
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+        <div className="mb-3">
+          {/* #2 select 選擇、預設值 */}
+          <label htmlFor="area">地區</label>
+          <br />
+          <select id="area" value={area} onChange={(e) => setArea(e.target.value)}>
+            <option value="" disabled>-- 請選擇地區 --</option>
+            {
+              areaList.map((item) => (
+                <option key={item.value} value={item.value}>{item.text}</option>
+              ))
+            }
+          </select>
+        </div>
+
+        <div className="mb-3">
+          {/* #3 multiSelect */}
+          <label htmlFor="hobby">愛好</label>
+          <br />
+          <select id="hobby" multiple value={hobby} onChange={handleHobbyChange}>
+            {
+              hobbyList.map((item) => (
+                <option key={item.value} value={item.value}>{item.text}</option>
+              ))
+            }
+          </select>
+        </div>
+
+        <hr />
+
+        <pre>
+          userName: {userName} <br />
+          area: {area} <br />
+          hobby: {hobby.join(', ')}
+        </pre>
+      </>
+    )
+  }
+
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

@@ -2,10 +2,11 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">React Hook Form 錯誤樣式</h1><small>檔名：<code>hookFormErrorStyle.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
 
+<!-- 🔥🔥練習開始🔥🔥 -->
 <div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/react-hook-form@7.33.1/dist/index.umd.min.js"></script>
+
 <script type="text/babel">
   const { useState, useEffect } = React;
   const { useForm, useWatch } = ReactHookForm;
@@ -17,58 +18,75 @@
       watch,
       getValues,
       control,
+      formState: { errors }, // 取得錯誤物件
     } = useForm({
       defaultValues: {
         username: '卡斯伯',
         like: []
       },
+      mode: 'onBlur', // 驗證時機：onSubmit、onBlur、onChange、onTouched、all
     });
+
     const onSubmit = (data) => {
       console.log(data);
     };
 
     return (
       <div>
-        <form action='' onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='mb-3'>
-            <label htmlFor='username' className='form-label'>
-              使用者名稱
-            </label>
+            <label htmlFor='username' className='form-label'>使用者名稱</label>
             <input
               id='username'
               type='text'
-              {...register('username')}
-              className="form-control"
-              />
+              {...register('username', { required: true })}
+              className={`form-control ${errors.username ? "is-invalid" : ""}`}
+            />
+            <div className="invalid-feedback">必填</div>
             {/*
-              `errors.username && "is-invalid"`
-              也可改寫成 `errors.username ? "is-invalid" : ""`
+              `errors.username && "is-invalid"` 也可改寫成 `errors.username ? "is-invalid" : ""`
               渲染後就不會出現 undefined 的額外 className
             */}
           </div>
-          <div className="mb-3"> 
+
+          <div className="mb-3">
             <div className="form-check">
-              <input id="checkList1" type="checkbox"
-              className="form-check-input"
-              {...register('like')} name="like" value='炒麵' />
+              <input
+                id="checkList1"
+                type="checkbox"
+                name="like"
+                value="炒麵"
+                {...register('like', { required: true })}
+                className={`form-check-input ${errors.like ? "is-invalid" : ""}`}
+              />
               <label className='form-check-label' htmlFor="checkList1">炒麵</label>
             </div>
             <div className="form-check">
-              <input id="checkList2" type="checkbox"
-              className="form-check-input"
-              {...register('like')} name="like" value='鍋燒意麵' />
+              <input
+                id="checkList2"
+                type="checkbox"
+                name="like"
+                value="鍋燒意麵"
+                {...register('like', { required: true })}
+                className={`form-check-input ${errors.like ? "is-invalid" : ""}`}
+              />
               <label className='form-check-label' htmlFor="checkList2">鍋燒意麵</label>
             </div>
             <div className="form-check">
-              <input id="checkList3" type="checkbox"
-              className="form-check-input"
-              {...register('like')} name="like" value='炸薯條' />
+              <input
+                id="checkList3"
+                type="checkbox"
+                name="like"
+                value="炸薯條"
+                {...register('like', { required: true })}
+                className={`form-check-input ${errors.like ? "is-invalid" : ""}`}
+              />
               <label className='form-check-label' htmlFor="checkList3">炸薯條</label>
+              <div className="invalid-feedback">必填</div>
             </div>
           </div>
-          <button type='submit' className='btn btn-primary'>
-            註冊
-          </button>
+
+          <button type='submit' className='btn btn-primary'>註冊</button>
         </form>
       </div>
     );

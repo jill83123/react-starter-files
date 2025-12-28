@@ -2,39 +2,60 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">React 與表單元素 2</h1><small>檔名：<code>reactForm2.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-const { useState } = React
-const App = () => {
-  // #1-1 單一 checkbox
+  const { useState } = React
 
-  // #1-2 複數 checkbox
+  const App = () => {
+    // #1-1 單一 checkbox
+    const [isCheck, setIsCheck] = useState(false);
 
+    // #1-2 複數 checkbox
+    const [checkList, setCheckList] = useState([]);
 
-  return (<div>
-  {/* #1-1 checkbox */}
-  <label htmlFor="isCheck">確認狀態 </label>
-  <input id="isCheck" type="checkbox"/>
+    const handleCheckListChange = (e) => {
+      const { value, checked } = e.target;
+      if (checked) {
+        setCheckList([...checkList, value]);
+      } else {
+        setCheckList(checkList.filter((item) => item !== value));
+      }
+    };
 
-  {/* #1-2 checkList */}
-  <br/>
-  
-  <br/>
-  <label htmlFor="checkList1">炒麵</label>
-  <input id="checkList1" type="checkbox" name="like" value='炒麵' />
-  <label htmlFor="checkList2">鍋燒意麵</label>
-  <input id="checkList2" type="checkbox" name="like" value='鍋燒意麵' />
-  <label htmlFor="checkList3">炸薯條</label>
-  <input id="checkList3" type="checkbox" name="like" value='炸薯條' />
+    return (
+      <>
+        {/* #1-1 checkbox */}
+        <input id="isCheck" type="checkbox" value={isCheck} onChange={(e) => setIsCheck(e.target.checked)} />
+        <label htmlFor="isCheck">確認狀態 </label>
+        <br />
 
+        {/* #1-2 checkList */}
+        <input id="checkList1" type="checkbox" name="like" value='炒麵' onChange={handleCheckListChange} />
+        <label htmlFor="checkList1">炒麵</label>
 
-  </div>)
-}
+        <input id="checkList2" type="checkbox" name="like" value='鍋燒意麵' onChange={handleCheckListChange} />
+        <label htmlFor="checkList2">鍋燒意麵</label>
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+        <input id="checkList3" type="checkbox" name="like" value='炸薯條' onChange={handleCheckListChange} />
+        <label htmlFor="checkList3">炸薯條</label>
+
+        <hr />
+        <pre>
+          checkbox: {JSON.stringify(isCheck)} <br />
+          checkList: {checkList.join(', ')}
+        </pre>
+      </>
+    )
+  }
+
+  ReactDOM
+    .createRoot(document.querySelector('#root'))
+    .render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   
