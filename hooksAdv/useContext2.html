@@ -2,48 +2,70 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">useContext 進階</h1><small>檔名：<code>useContext2.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-const { useState, useEffect, createContext, useContext } = React;
+  const { useState, useEffect, createContext, useContext } = React;
 
-const UserContext = createContext({})
+  const UserContext = createContext({})
 
-const LoginForm = () => {
-  const { username, setUsername, setIsLogin } = useContext(UserContext);
-  
-  return (<>
-    <label htmlFor="username">使用者名稱</label>
-    <input type="text" id="username"
-      value={username}
-      onChange={e => setUsername(e.target.value)}
-      placeholder="請輸入使用者名稱" />
-    <button type="button" onClick={()=> setIsLogin(true)}>登入</button>
-  </>)
-}
+  const LoginForm = () => {
+    const { username, setUsername, setIsLogin } = useContext(UserContext);
 
-const Greeting = () => {
-  const { username } = useContext(UserContext);
-  return <>
-    { username } 你好, 歡迎登入
-  </>
-}
+    return (
+      <>
+        <label htmlFor="username">使用者名稱</label>
+        <input type="text" id="username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          placeholder="請輸入使用者名稱" />
+        <button type="button" onClick={() => setIsLogin(true)}>登入</button>
+      </>
+    )
+  }
 
-const App = () => {
-  const [username, setUsername] = useState('卡斯伯');
-  const [isLogin, setIsLogin] = useState(false);
+  const Greeting = () => {
+    const { username } = useContext(UserContext);
+    return (
+      <>
+        {username} 你好, 歡迎登入
+      </>
+    )
+  }
 
-  return (<>
-    <UserContext.Provider value={{ username, setUsername, setIsLogin }}>
-      { isLogin ? <Greeting /> : <LoginForm /> }
-    </UserContext.Provider>
-  </>)
-}
+  // 將 Provider 包裝成一個元件，集中管理狀態
+  const UserProvider = ({ children }) => {
+    const [username, setUsername] = useState('卡斯伯');
+    const [isLogin, setIsLogin] = useState(false);
+    return (
+      <UserContext.Provider
+        value={{ username, setUsername, isLogin, setIsLogin }}
+      >
+        {children}
+      </UserContext.Provider>
+    )
+  }
 
+  const Dashboard = () => {
+    const { isLogin } = useContext(UserContext);
+    return isLogin ? <Greeting /> : <LoginForm />
+  }
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+  const App = () => {
+    return (
+      <>
+        <UserProvider>
+          <Dashboard />
+        </UserProvider>
+      </>
+    )
+  }
+
+  ReactDOM.createRoot(document.querySelector('#root')).render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

@@ -2,35 +2,44 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">useMemo</h1><small>檔名：<code>useMemo.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-const { useState, useEffect } = React;
+  const { useState, useEffect, useMemo } = React;
 
-let num = 0;
-const App = () => {
-  const [price, setPrice] = useState(100);
-  const [qty, setQty] = useState(1);
+  let num = 0;
+  const App = () => {
+    const [price, setPrice] = useState(100);
+    const [qty, setQty] = useState(1);
+    const [text, setText] = useState('');
 
-  const total = price * qty;
-  num++;
-  console.log(`程式碼已經被計算 ${num} 次`);
+    const total = price * qty;
+    num++;
+    console.log(`程式碼已經被計算 ${num} 次`);
 
+    const totalByMemo = useMemo(() => {
+      console.log('useMemo 觸發');
+      return price * qty;
+    }, [price, qty]); // 條件
 
-  return (<>
-    {price} {qty}
-    <input type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
-    <input type="number" value={qty} onChange={(e) => setQty(parseInt(e.target.value))} />
-    <div>
-      總價：{total}
-    </div>
-  </>)
-}
+    return (
+      <>
+        <pre>price: {price}, qty: {qty}</pre>
+        <div className="mb-3">
+          <input type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
+          <input type="number" value={qty} onChange={(e) => setQty(parseInt(e.target.value))} />
+          <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
+        </div>
+        <pre>total: {total}, totalByMemo: {totalByMemo}</pre>
+      </>
+    )
+  }
 
-
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+  ReactDOM.createRoot(document.querySelector('#root')).render(<App />)
 </script>
+
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

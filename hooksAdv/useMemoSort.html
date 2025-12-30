@@ -2,9 +2,10 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">useMemo 搜尋、排序</h1><small>檔名：<code>useMemoSort.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
 
+<!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
   const { useState, useEffect, useMemo } = React;
   const sampleData = [
@@ -38,7 +39,7 @@
     },
     {
       id: 5,
-      title: '粉係馬卡龍',
+      title: '粉系馬卡龍',
       imageUrl:
         'https://images.unsplash.com/photo-1612201142855-7873bc1661b4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
       price: 120,
@@ -48,25 +49,55 @@
   let num = 0;
   const App = () => {
     const [products, setProducts] = useState(sampleData);
-    const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
+    const [isAscending, setIsAscending] = useState(true);
+
+    const filteredProducts = useMemo(() => {
+      return products
+        .filter((product) => product.title.match(search))
+        .sort((a, b) => isAscending ? a.price - b.price : b.price - a.price);
+    }, [search, isAscending]);
 
     return (
       <>
-        升降冪：
-        <input
-          type='checkbox'
-          checked={ascending}
-          onChange={(e) => setAscending(e.target.checked)}
-        /> 
-        {ascending.toString()}
-        <br />
-        搜尋：
-        <input
-          type='search'
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <div className="form-check mb-3">
+          <input
+            type="checkbox"
+            id="sort"
+            checked={isAscending}
+            onChange={(e) => setIsAscending(e.target.checked)}
+            className="form-check-input"
+          />
+          <label for="sort" className="form-check-label">
+            {isAscending ? '價格由低到高' : '價格由高到低'}
+          </label>
+        </div>
+        <div className="mb-3">
+          <label for="search" className="form-label">搜尋</label>
+          <input
+            type="search"
+            id="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="form-control"
+          />
+        </div>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>產品名稱</th>
+              <th>價格</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredProducts.map((product) => (
+              <tr key={product.id}>
+                <td>{product.title}</td>
+                <td>{product.price}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </>
     );
   };

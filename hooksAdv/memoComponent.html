@@ -2,11 +2,12 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">memo 元件</h1><small>檔名：<code>memoComponent.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
 
+<!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-  const { useState, useEffect, useMemo } = React;
+  const { useState, useEffect, useMemo, memo } = React;
   const sampleData = [
     {
       id: 1,
@@ -45,11 +46,30 @@
     },
   ];
 
-  let num = 0;
+  // 當 props 改變時元件才會重新渲染
+  const ProductTable = memo(({ filterProducts }) => {
+    console.log('ProductTable 元件刷新');
+    return (
+      <table className='table'>
+        <tbody>
+          {filterProducts.map((product) => {
+            return (
+              <tr key={product.id}>
+                <td>{product.title}</td>
+                <td>{product.price}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  });
+
   const App = () => {
     const [products, setProducts] = useState(sampleData);
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
+    const [text, setText] = useState('');
 
     const filterProducts = useMemo(() => {
       return [...products]
@@ -63,6 +83,12 @@
 
     return (
       <>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <br />
         升降冪：
         <input
           type='checkbox'
@@ -77,18 +103,7 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <table className='table'>
-          <tbody>
-            {filterProducts.map((product) => {
-              return (
-                <tr key={product.id}>
-                  <td>{product.title}</td>
-                  <td>{product.price}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <ProductTable filterProducts={filterProducts} />
       </>
     );
   };

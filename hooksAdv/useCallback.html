@@ -2,10 +2,12 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">useCallback</h1><small>檔名：<code>useCallback.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-  const { useState, useEffect, useMemo, memo } = React;
+  const { useState, useEffect, useMemo, memo, useCallback } = React;
   const sampleData = [
     {
       id: 1,
@@ -37,7 +39,7 @@
     },
     {
       id: 5,
-      title: '粉係馬卡龍',
+      title: '粉系馬卡龍',
       imageUrl:
         'https://images.unsplash.com/photo-1612201142855-7873bc1661b4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
       price: 120,
@@ -45,13 +47,16 @@
   ];
 
   // 使用 memo
-  const DataTable = memo(({filterProducts}) => {
+  const DataTable = memo(({ filterProducts, handleCheck }) => {
     console.log(`元件更新觸發`);
     return (<table className='table'>
       <tbody>
         {filterProducts.map((product) => {
           return (
             <tr key={product.id}>
+              <td>
+                <input type="checkbox" value={product.title} onChange={handleCheck} />
+              </td>
               <td>{product.title}</td>
               <td>{product.price}</td>
             </tr>
@@ -61,12 +66,12 @@
     </table>)
   })
 
-  let num = 0;
   const App = () => {
     const [products, setProducts] = useState(sampleData);
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
-    const [text, setText] = useState('')
+    const [text, setText] = useState('');
+    const [checkedItems, setCheckedItems] = useState([]);
 
     const filterProducts = useMemo(() => {
       return [...products]
@@ -78,28 +83,39 @@
         });
     }, [ascending, search]);
 
+    const handleCheck = useCallback((e) => {
+      if (e.target.checked) {
+        setCheckedItems([...checkedItems, e.target.value])
+      } else {
+        setCheckedItems(checkedItems.filter((item) => item !== e.target.value))
+      }
+    }, [checkedItems]); // 當 checkedItems 改變時，會暫存一個新的函式
+
     return (
       <>
-        <input type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="額外新增的字串" />
-        <br/>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="額外新增的字串"
+        />
+        <br />
         升降冪：
         <input
-          type='checkbox'
+          type="checkbox"
           checked={ascending}
           onChange={(e) => setAscending(e.target.checked)}
-        />{' '}
+        />
         {ascending.toString()}
         <br />
         搜尋：
         <input
-          type='search'
+          type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <DataTable filterProducts={filterProducts}></DataTable>
+        <p>{checkedItems.join('、')}</p>
+        <DataTable filterProducts={filterProducts} handleCheck={handleCheck} />
       </>
     );
   };

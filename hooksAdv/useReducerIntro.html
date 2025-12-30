@@ -2,26 +2,43 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">useReducerIntro</h1><small>檔名：<code>useReducerIntro.html</code></small></div>
-<!-- 🔥🔥練習開始🔥🔥 -->
 
+<!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
   const { useState, useReducer } = React;
 
   const App = () => {
-    const [num, setNum] = useState(0)
+    const [state, dispatch] = useReducer((state, action) => {
+      switch (action.type) {
+        case 'SET_NUM':
+          return { num: action.payload }
+        case 'INCREMENT':
+          return { num: state.num + 1 }
+        case 'DECREMENT':
+          return { num: state.num - 1 }
+        default:
+          return state;
+      }
+    }, { num: 0 });
+
+    function setNum(e) {
+      dispatch({ type: 'SET_NUM', payload: e.target.value });
+    }
     function increment() {
-      setNum( num + 1);
+      dispatch({ type: 'INCREMENT' });
     }
     function decrement() {
-      setNum( num - 1);
+      dispatch({ type: 'DECREMENT' });
     }
 
     return (
       <>
-        <button type="button" onClick={() => decrement() }>-</button>
-        {num}
-        <button type="button" onClick={() => increment() }>+</button>
+        <button type="button" onClick={() => decrement()}>-</button>
+        {state.num}
+        <button type="button" onClick={() => increment()}>+</button>
+        <input type="number" value={state.num} onChange={(e) => setNum(e)} />
       </>
     );
   };

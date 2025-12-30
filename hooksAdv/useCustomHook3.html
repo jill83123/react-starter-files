@@ -2,26 +2,46 @@
 </head><body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">使用現成的 Hooks</h1><small>檔名：<code>useCustomHook3.html</code></small></div>
+
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
-const { useState, useEffect, useRef } = React;
+  const { useState, useEffect, useRef } = React;
 
-// https://usehooks.com/
-// https://usehooks.com/useDebounce/
+  // https://usehooks.com/
+  // https://usehooks.com/useDebounce/
 
-const App = () => {
-  const [text, setText] = useState('')
+  function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
 
-  return (<>
-    <input type="text" onChange={e => setText(e.target.value)}
-    />
-  </>)
-}
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
 
+      return () => clearTimeout(handler)
+    }, [value, delay]);
 
-ReactDOM.createRoot(document.querySelector('#root'))
-  .render(<App/>)
+    return debouncedValue;
+  }
+
+  const App = () => {
+    const [text, setText] = useState('');
+    const debouncedText = useDebounce(text, 500);
+
+    useEffect(() => {
+      console.log('Debounced Text:', debouncedText);
+    }, [debouncedText]);
+
+    return (
+      <>
+        <input type="text" onChange={e => setText(e.target.value)} />
+      </>
+    )
+  }
+
+  ReactDOM.createRoot(document.querySelector('#root')).render(<App />)
 </script>
 
 <!-- 🙇🙇練習結束🙇🙇 -->
